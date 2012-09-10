@@ -7,3 +7,7 @@
 //
 
 #include <stdio.h>
+
+int getIndexByHash(const char *word){
+    return -1;
+}

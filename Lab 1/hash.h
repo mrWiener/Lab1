@@ -9,6 +9,6 @@
 #ifndef Lab_1_hash_h
 #define Lab_1_hash_h
 
-
+int getIndexByHash(const char *word);
 
 #endif
