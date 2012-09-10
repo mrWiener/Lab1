@@ -6,6 +6,8 @@ public class Main {
 			String word = args[0];
 			
 			System.out.println("Word to analyze: " + word);
+			FoundResults fr = WordFinder.find(word);
+			
 		}
 		else if (args.length == 2) {
 			String file = args[1];
