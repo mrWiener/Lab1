@@ -37,6 +37,24 @@ public class FileBuffered{
 		}
 	}
 	
+	public WordPair readWordPair() {
+		if (reader == null) {
+			System.out.println("File not opened for reading: " + getFilename());
+			
+			return null;
+		}
+		
+		String line[] = new String[2];
+		try {
+			line = reader.readLine().split(" ");
+		} catch (IOException e) {
+			System.out.println("Failed to read line in file: " + getFilename());
+			e.printStackTrace();
+		}
+		
+		return new WordPair(line[0], Integer.parseInt(line[1]));
+	}
+	
 	public String getFilename() {
 		return filename;
 	}
