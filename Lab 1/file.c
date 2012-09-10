@@ -7,6 +7,7 @@
 //
 
 #include <stdio.h>
+#include "file.h"
 
 FILE* openfile(const char *filename, const char *mode) {
     return fopen(filename, mode);
@@ -18,4 +19,13 @@ int closefile(FILE *file) {
 
 char* readline() {
     return NULL;
+}
+
+wordpair readPairByLine(int line) {
+    
+    wordpair p;
+    p.text = "hej";
+    p.index = 3;
+    
+    return p;
 }

@@ -9,14 +9,15 @@
 #ifndef Lab_1_file_h
 #define Lab_1_file_h
 
-struct wordpair {
+typedef struct _wordpair {
     char *text;
     int index;
-};
+} wordpair;
 
 FILE* openfile(const char *filename, const char *mode);
-char* readline();
+int closefile(FILE *file);
 
+char* readline();
 wordpair readPairByLine(int line);
 
 #endif
