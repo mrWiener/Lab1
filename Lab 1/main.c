@@ -20,6 +20,10 @@ int main(int argc, const char * argv[])
     
     printf("Word to search for: %s", word);
     
+    FILE *file = openfile("./resources/words.txt", "r");
+    
+    
+    
     return 0;
 }
 
