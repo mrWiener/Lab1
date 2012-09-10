@@ -8,7 +8,7 @@ public class Main {
 			System.out.println("Word to analyze: " + word);
 		}
 		else if (args.length == 2) {
-			String file = args[1];
+			String filename = args[1];
 			
 		}
 		else {
