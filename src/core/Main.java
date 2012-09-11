@@ -5,8 +5,8 @@ import java.io.IOException;
 
 public class Main {
 	
-	public static final String MEDIUM_INDEX_PATH = "medium_index.txt";
-	public static final String SMALL_INDEX_PATH = "resources/";
+	public static final String MEDIUM_INDEX_PATH = "resources/medium_index.txt";
+	public static final String SMALL_INDEX_PATH = "resources/smallIndexes/";
 	
 	public static void main(String[] args) throws IOException {
 		if (args.length == 1) {
@@ -17,7 +17,7 @@ public class Main {
 			
 		}
 		else if (args.length == 2) {
-			String bigIndexPath = args[1];
+			String bigIndexPath = args[0];
 			writeIndexes(bigIndexPath);
 			
 		}
@@ -35,7 +35,8 @@ public class Main {
 		File f = new File(MEDIUM_INDEX_PATH);
 		delete(f);
 		f.createNewFile();
-		delete(SMALL_INDEX_PATH.replace("/", ""));
+		delete(SMALL_INDEX_PATH.substring(0, SMALL_INDEX_PATH.length() - 1 ));
+		new File(SMALL_INDEX_PATH.substring(0, SMALL_INDEX_PATH.length() - 1 )).mkdir();
 		
 		
 		FileBuffered mediumIndexFile = new FileBuffered(MEDIUM_INDEX_PATH, "w");
@@ -53,12 +54,18 @@ public class Main {
 					newSmallFile.createNewFile();
 					FileBuffered smallIndexFile = new FileBuffered(smallIndexFileName, "w");
 					smallIndexFile.write(mediumIndexPos + "");
+					smallIndexFile.writer.close();
 				}
 				mediumIndexPos += appendMediumText.length();
 			}
 			int largeIndexPlusser = currentBigWord.length() + (bigIndexPair.index + "").length() + 2;
 			largeIndexPos += largeIndexPlusser;
+			bigIndexPair = largeIndexFile.readWordPair();
 		}
+		
+		mediumIndexFile.writer.close();
+		largeIndexFile.reader.close();
+		System.out.println("Done createing indices!");
 		//Bör kanske ta bort sista "mellanslaget" i mediumIndexFile här.
 	}
 	
@@ -103,7 +110,6 @@ public class Main {
 	    	}else if(file.isFile()){
 	    		//if file, then delete it
 	    		file.delete();
-	    		System.out.println("File is deleted : " + file.getAbsolutePath());
 	    	}
 	    }
 }

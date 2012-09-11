@@ -12,8 +12,8 @@ public final class WordFinder {
 	}
 	public static int getSmallIndex(String word){
 		int returnValue = 0;
-		for(int i = 0; i < 3 || i < word.length(); i++){
-			returnValue += convertCharToInt(word.charAt(i))*28^i;
+		for(int i = 0; i < 3 && i < word.length(); i++){
+			returnValue += Math.pow(29, i)*convertCharToInt(word.charAt(i));
 		}
 		
 		return returnValue;
@@ -28,12 +28,12 @@ public final class WordFinder {
 			return ascii - 96;
 		}else if(ascii == 134 || ascii == 143){
 			return 27;
-		}else if(ascii == 132 || ascii == 142){
+		}else if(ascii == 228 || ascii == 142){
 			return 28;
-		}else if(ascii == 148 || ascii == 153){
+		}else if(ascii == 246 || ascii == 153){ // ska vara 146 inte 246
 			return 29;
 		} else{
-			throw new RuntimeException("Character is not a letter: " + c);
+			throw new RuntimeException("Character is not a letter: " + c + " and gives the ascii: " + ascii);
 		}
 	}
 

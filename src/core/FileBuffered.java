@@ -47,13 +47,14 @@ public class FileBuffered{
 		
 		String line[] = new String[2];
 		try {
-			line = reader.readLine().split(" ");
+			String lineString = reader.readLine();
+			if (lineString == null){
+				return null;
+			}
+			line = lineString.split(" ");
 		} catch (IOException e) {
 			System.out.println("Failed to read line in file: " + getFilename());
 			e.printStackTrace();
-		}
-		if (line == null){
-			return null;
 		}
 		return new WordPair(line[0], Long.parseLong(line[1]));
 	}
