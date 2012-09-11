@@ -10,9 +10,8 @@ public class Main {
 			
 		}
 		else if (args.length == 2) {
-			String file = args[1];
+			String filename = args[1];
 			
-			System.out.println(file);
 		}
 		else {
 			System.out.println("Specify arguments.");
