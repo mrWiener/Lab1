@@ -54,7 +54,6 @@ public class Main {
 					FileBuffered smallIndexFile = new FileBuffered(smallIndexFileName, "w");
 					smallIndexFile.write(mediumIndexPos + "");
 				}
-
 				mediumIndexPos += appendMediumText.length();
 			}
 			int largeIndexPlusser = currentBigWord.length() + (bigIndexPair.index + "").length() + 2;
