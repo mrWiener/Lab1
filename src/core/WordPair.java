@@ -2,9 +2,9 @@ package core;
 
 public class WordPair {
 	public String text;
-	public int index;
+	public long index;
 	
-	WordPair(String text, int index) {
+	WordPair(String text, long index) {
 		this.text = text;
 		this.index = index;
 	}

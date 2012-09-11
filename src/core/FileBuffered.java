@@ -12,6 +12,7 @@ public class FileBuffered{
 	BufferedWriter writer = null;
 	String filename;
 	
+	
 	public FileBuffered(String filename, String mode) {
 		this.filename = filename;
 		
@@ -51,11 +52,20 @@ public class FileBuffered{
 			System.out.println("Failed to read line in file: " + getFilename());
 			e.printStackTrace();
 		}
-		
-		return new WordPair(line[0], Integer.parseInt(line[1]));
+		if (line == null){
+			return null;
+		}
+		return new WordPair(line[0], Long.parseLong(line[1]));
 	}
 	
 	public String getFilename() {
 		return filename;
+	}
+
+	public void append(String text) throws IOException {
+		writer.append(text);
+	}
+	public void write(String text) throws IOException {
+		writer.write(text);
 	}
 }

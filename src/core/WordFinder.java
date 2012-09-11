@@ -1,9 +1,12 @@
 package core;
 
+import java.io.FileNotFoundException;
+
 public final class WordFinder {
 
-	public static FoundResults find(String word) {
+	public static FoundResults find(String word) throws FileNotFoundException {
 		int smallIndex = getSmallIndex(word);
+		FileRandom fr = new FileRandom("","");
 		return null;
 		
 	}
@@ -17,7 +20,7 @@ public final class WordFinder {
 		
 	}
 	
-	public static int convertCharToInt(char c){
+	private static int convertCharToInt(char c){
 		int ascii = (int) c;
 		if(ascii > 64 && ascii < 91){
 			return ascii - 64;
