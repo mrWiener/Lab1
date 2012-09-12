@@ -11,13 +11,13 @@ public final class WordFinder {
 	public static WordPair find(String word) throws IOException {
 		int smallIndex = hashSmallIndex(word);
 		
-		if(!new File(Main.SMALL_INDICES_PATH + smallIndex + ".txt").isFile()){
+		if(!new File(Main.SMALL_INDICES_PATH + smallIndex).isFile()){
 			// We don't have the "hash-file" meaning we do not have the word!
 			return null;
 		}
 		
 		// Get the fi
-		FileBuffered smallIndexFileStart = new FileBuffered(Main.SMALL_INDICES_PATH + smallIndex + ".txt", "r");
+		FileBuffered smallIndexFileStart = new FileBuffered(Main.SMALL_INDICES_PATH + smallIndex, "r");
 		FileRandom mediumIndexFile = new FileRandom(Main.MEDIUM_INDEX_NAME, "r");
 		
 		// Get the starting pos and the starting word before the search starts
@@ -31,8 +31,8 @@ public final class WordFinder {
 		
 		boolean foundFile = false;
 		for(int i = 1; smallIndex + i <= hashSmallIndex("ššš") && !foundFile; i++){
-			if(new File(Main.SMALL_INDICES_PATH + (smallIndex + 1) + ".txt").isFile()){
-				FileBuffered smallIndexFileEnd = new FileBuffered(Main.SMALL_INDICES_PATH + (smallIndex + 1) + ".txt", "r");
+			if(new File(Main.SMALL_INDICES_PATH + (smallIndex + i)).isFile()){
+				FileBuffered smallIndexFileEnd = new FileBuffered(Main.SMALL_INDICES_PATH + (smallIndex + i), "r");
 				endPair = mediumIndexFile.readWordWalkLeft(Long.parseLong(smallIndexFileEnd.readLine()) - 1);
 				smallIndexFileEnd.close();
 				foundFile = true;
@@ -51,6 +51,9 @@ public final class WordFinder {
 		} else{
 			bigIndex = binarySearch(startPair, endPair, word, mediumIndexFile);
 		}
+		if(bigIndex == -1){
+			return null;
+		}
 		LinkedList<Long> bigIndicesList = getBigIndices(bigIndex, word);
 		return getFinalResult(bigIndicesList, word);
 		
@@ -61,7 +64,7 @@ public final class WordFinder {
 		FileRandom korpusFile = new FileRandom(Main.KORPUS_NAME, "r");
 		StringBuilder returnText = new StringBuilder();
 		for(long korpusIndex : bigIndicesList){
-			returnText.append(korpusFile.getSurroundingText(korpusIndex, word.length()) + "\n");
+			returnText.append(korpusFile.getSurroundingText(korpusIndex, word.length()).replace("\n", " ") + "\n");
 		}
 		korpusFile.close();
 		return new WordPair(returnText.toString(), bigIndicesList.size());
@@ -108,7 +111,13 @@ public final class WordFinder {
 	public static int hashSmallIndex(String word){
 		int returnValue = 0;
 		for(int i = 0; i < 3 && i < word.length(); i++){
-			returnValue += Math.pow(29, i)*convertCharToInt(word.charAt(i));
+			if(i == 0){
+				returnValue += convertCharToInt(word.charAt(i))*871-870;
+			} else if(i == 1){
+				returnValue += convertCharToInt(word.charAt(i))*30 -29;
+			} else {
+				returnValue += convertCharToInt(word.charAt(i));
+			}
 		}
 		
 		return returnValue;
@@ -121,7 +130,7 @@ public final class WordFinder {
 			return ascii - 64;
 		}else if(ascii > 96 && ascii < 123){
 			return ascii - 96;
-		}else if(ascii == 134 || ascii == 143){
+		}else if(ascii == 229 || ascii == 143){
 			return 27;
 		}else if(ascii == 228 || ascii == 142){
 			return 28;

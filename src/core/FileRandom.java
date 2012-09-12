@@ -60,11 +60,17 @@ public class FileRandom extends RandomAccessFile{
 				found = true;
 			}else{
 				lastLetter = currentLetter;
-				seek(getFilePointer() - 2);
-				currentLetter = convertByteToString((byte)read());
+				if(getFilePointer() - 2 < 2){
+					seek(0);
+					found = true;
+				} else{
+					seek(getFilePointer() - 2);
+					currentLetter = convertByteToString((byte)read());
+				}
 			}
 		}
-		return new WordPair(readWordStandStill(getFilePointer()),getFilePointer());
+		long wordPointer = getFilePointer();
+		return new WordPair(readWordStandStill(getFilePointer()),wordPointer);
 	}
 	
 	public WordPair readWordWalkRight(long seekValue) throws IOException {
@@ -79,12 +85,14 @@ public class FileRandom extends RandomAccessFile{
 		while(!found){
 			if(lastLetter.equals(" ") && !isInteger(currentLetter)){
 				found = true;
+				seek(getFilePointer()-1);
 			}else{
 				lastLetter = currentLetter;
 				currentLetter = convertByteToString((byte)read());
 			}
 		}
-		return new WordPair(readWordStandStill(getFilePointer()),getFilePointer());
+		long wordPointer = getFilePointer();
+		return new WordPair(readWordStandStill(getFilePointer()),wordPointer);
 	}
 	
 	private String convertByteToString(byte b) throws UnsupportedEncodingException{
@@ -104,6 +112,9 @@ public class FileRandom extends RandomAccessFile{
        {  
           return false;  
        }  
+       catch(StackOverflowError e){
+    	   return false;
+       }
     }
 
 	public long readWordsIndex(long seekValue) throws IOException {
@@ -119,6 +130,8 @@ public class FileRandom extends RandomAccessFile{
 		long startPoint = wordStart-Main.SURROUNDING_TEXT_SIZE;
 		if(startPoint < 0){
 			seek(0);
+		} else{
+			seek(startPoint);
 		}
 		StringBuilder word = new StringBuilder();
 		for(int i = 0; i < wordSize + Main.SURROUNDING_TEXT_SIZE*2; i++){

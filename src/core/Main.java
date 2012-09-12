@@ -5,9 +5,9 @@ import java.io.IOException;
 
 public class Main {
 	
-	public static final String MEDIUM_INDEX_NAME = "resources/medium_index.txt";
+	public static final String MEDIUM_INDEX_NAME = "resources/medium_index";
 	public static final String SMALL_INDICES_PATH = "resources/smallIndices/";
-	public static final String BIG_INDEX_NAME = "resources/words.txt";
+	public static final String BIG_INDEX_NAME = "resources/words";
 	public static final String KORPUS_NAME = "resources/korpus";
 	public static final Integer SURROUNDING_TEXT_SIZE = 30;
 	
@@ -17,6 +17,10 @@ public class Main {
 			
 			System.out.println("Word to analyze: " + word);
 			WordPair result = WordFinder.find(word);
+			if(result == null){
+				System.out.println("Word not found!");
+				return;
+			}
 			System.out.println("Det finns " + result.index + " fšrekomster av ordet.");
 			System.out.println(result.text);
 			
@@ -59,7 +63,7 @@ public class Main {
 				String appendMediumText = currentBigWord + " " + bigIndexPos + " ";
 				mediumIndexFile.append(appendMediumText);
 				lastMediumWord = currentBigWord;
-				String smallIndexFileName = SMALL_INDICES_PATH + WordFinder.hashSmallIndex(lastMediumWord) + ".txt";
+				String smallIndexFileName = SMALL_INDICES_PATH + WordFinder.hashSmallIndex(lastMediumWord);
 				File newSmallFile = new File(smallIndexFileName);
 				if(!newSmallFile.isFile()){
 					// We have a new "three-word-combination" that needs to added to the small indices directory
