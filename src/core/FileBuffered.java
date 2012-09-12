@@ -69,4 +69,16 @@ public class FileBuffered{
 	public void write(String text) throws IOException {
 		writer.write(text);
 	}
+	public void close() throws IOException{
+		if(reader != null){
+			reader.close();
+		}
+		if(writer != null){
+			writer.close();
+		}
+	}
+
+	public String readLine() throws IOException {
+		return reader.readLine();
+	}
 }

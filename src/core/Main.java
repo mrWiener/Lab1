@@ -5,20 +5,26 @@ import java.io.IOException;
 
 public class Main {
 	
-	public static final String MEDIUM_INDEX_PATH = "resources/medium_index.txt";
-	public static final String SMALL_INDEX_PATH = "resources/smallIndexes/";
+	public static final String MEDIUM_INDEX_NAME = "resources/medium_index.txt";
+	public static final String SMALL_INDICES_PATH = "resources/smallIndices/";
+	public static final String BIG_INDEX_NAME = "resources/words.txt";
+	public static final String KORPUS_NAME = "resources/korpus";
+	public static final Integer SURROUNDING_TEXT_SIZE = 30;
 	
 	public static void main(String[] args) throws IOException {
 		if (args.length == 1) {
 			String word = args[0];
 			
 			System.out.println("Word to analyze: " + word);
-			FoundResults fr = WordFinder.find(word);
+			WordPair result = WordFinder.find(word);
+			System.out.println("Det finns " + result.index + " 4 förekomster av ordet.");
+			System.out.println(result.text);
+			
 			
 		}
 		else if (args.length == 2) {
-			String bigIndexPath = args[0];
-			writeIndexes(bigIndexPath);
+			String bigIndicePath = args[0];
+			writeIndices(bigIndicePath);
 			
 		}
 		else {
@@ -26,47 +32,52 @@ public class Main {
 		}
 	}
 	
-	private static void writeIndexes(String bigIndexPath) throws IOException{
-		long largeIndexPos = 0;
+	private static void writeIndices(String bigIndexPath) throws IOException{
+		long bigIndexPos = 0;
 		long mediumIndexPos = 0;
 		String lastMediumWord = "";
 		
-		FileBuffered largeIndexFile = new FileBuffered(bigIndexPath, "r");
-		File f = new File(MEDIUM_INDEX_PATH);
+		// Delete old files and create new medium index file and also create new directory for small indices
+		FileBuffered bigIndexFile = new FileBuffered(bigIndexPath, "r");
+		File f = new File(MEDIUM_INDEX_NAME);
 		delete(f);
 		f.createNewFile();
-		delete(SMALL_INDEX_PATH.substring(0, SMALL_INDEX_PATH.length() - 1 ));
-		new File(SMALL_INDEX_PATH.substring(0, SMALL_INDEX_PATH.length() - 1 )).mkdir();
+		delete(SMALL_INDICES_PATH.substring(0, SMALL_INDICES_PATH.length() - 1 ));
+		new File(SMALL_INDICES_PATH.substring(0, SMALL_INDICES_PATH.length() - 1 )).mkdir();
 		
+		// Open the writer to newly created medium index file
+		FileBuffered mediumIndexFile = new FileBuffered(MEDIUM_INDEX_NAME, "w");
+		// Get the first word and index pair in the big index file
+		WordPair bigIndexPair = bigIndexFile.readWordPair();
 		
-		FileBuffered mediumIndexFile = new FileBuffered(MEDIUM_INDEX_PATH, "w");
-		
-		WordPair bigIndexPair = largeIndexFile.readWordPair();
+		// Loop through the big index file until we have no more pairs/lines
 		while(bigIndexPair != null){
 			String currentBigWord = bigIndexPair.text;
 			if(!lastMediumWord.equals(bigIndexPair.text)){
-				String appendMediumText = currentBigWord + " " + largeIndexPos + " ";
+				// We have a new word that have not been added to the medium index file yet
+				// Add the new word to the medium index file together with the byte-position to the big index file
+				String appendMediumText = currentBigWord + " " + bigIndexPos + " ";
 				mediumIndexFile.append(appendMediumText);
 				lastMediumWord = currentBigWord;
-				String smallIndexFileName = SMALL_INDEX_PATH + WordFinder.getSmallIndex(lastMediumWord) + ".txt";
+				String smallIndexFileName = SMALL_INDICES_PATH + WordFinder.hashSmallIndex(lastMediumWord) + ".txt";
 				File newSmallFile = new File(smallIndexFileName);
 				if(!newSmallFile.isFile()){
+					// We have a new "three-word-combination" that needs to added to the small indices directory
 					newSmallFile.createNewFile();
 					FileBuffered smallIndexFile = new FileBuffered(smallIndexFileName, "w");
 					smallIndexFile.write(mediumIndexPos + "");
-					smallIndexFile.writer.close();
+					smallIndexFile.close();
 				}
 				mediumIndexPos += appendMediumText.length();
 			}
 			int largeIndexPlusser = currentBigWord.length() + (bigIndexPair.index + "").length() + 2;
-			largeIndexPos += largeIndexPlusser;
-			bigIndexPair = largeIndexFile.readWordPair();
+			bigIndexPos += largeIndexPlusser;
+			bigIndexPair = bigIndexFile.readWordPair();
 		}
 		
-		mediumIndexFile.writer.close();
-		largeIndexFile.reader.close();
+		mediumIndexFile.close();
+		bigIndexFile.close();
 		System.out.println("Done createing indices!");
-		//Bör kanske ta bort sista "mellanslaget" i mediumIndexFile här.
 	}
 	
 	public static void delete(String filePath) throws IOException{
