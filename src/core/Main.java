@@ -17,7 +17,7 @@ public class Main {
 			
 			System.out.println("Word to analyze: " + word);
 			WordPair result = WordFinder.find(word);
-			System.out.println("Det finns " + result.index + " 4 fšrekomster av ordet.");
+			System.out.println("Det finns " + result.index + " fšrekomster av ordet.");
 			System.out.println(result.text);
 			
 			
