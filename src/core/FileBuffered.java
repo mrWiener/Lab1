@@ -2,10 +2,15 @@ package core;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 
 public class FileBuffered{
 	BufferedReader reader = null;
@@ -13,12 +18,12 @@ public class FileBuffered{
 	String filename;
 	
 	
-	public FileBuffered(String filename, String mode) {
+	public FileBuffered(String filename, String mode) throws UnsupportedEncodingException {
 		this.filename = filename;
 		
 		if (mode.contains("r")) {
 			try {
-				reader = new BufferedReader(new FileReader(filename));
+				reader = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "ISO-8859-1"));
 			} catch (FileNotFoundException e) {
 				System.out.println("Failed to open file to read: " + filename);
 				e.printStackTrace();
@@ -26,7 +31,7 @@ public class FileBuffered{
 		}
 		if (mode.contains("w")) {
 			try {
-				writer = new BufferedWriter(new FileWriter(filename));
+				writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), "ISO-8859-1"));
 			} catch (IOException e) {
 				System.out.println("Failed to open file to write: " + filename);
 				e.printStackTrace();
@@ -51,16 +56,23 @@ public class FileBuffered{
 			if (lineString == null){
 				return null;
 			}
-			line = lineString.split(" ");
+			
+			line = new String(lineString.getBytes()).split(" ");
 		} catch (IOException e) {
 			System.out.println("Failed to read line in file: " + getFilename());
 			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
 		}
 		return new WordPair(line[0], Long.parseLong(line[1]));
 	}
 	
 	public String getFilename() {
 		return filename;
+	}
+	
+	public BufferedReader getReader() {
+		return reader;
 	}
 
 	public void append(String text) throws IOException {

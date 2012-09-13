@@ -4,11 +4,11 @@ import java.io.File;
 import java.io.IOException;
 
 public class Main {
-	
-	public static final String MEDIUM_INDEX_NAME = "resources/medium_index";
-	public static final String SMALL_INDICES_PATH = "resources/smallIndices/";
-	public static final String BIG_INDEX_NAME = "resources/words";
-	public static final String KORPUS_NAME = "resources/korpus";
+	public static final String INDEX_PATH = "/var/tmp/indices/";
+	public static final String MEDIUM_INDEX_NAME = INDEX_PATH + "medium";
+	public static final String SMALL_INDICES_PATH = INDEX_PATH + "small/";
+	public static final String BIG_INDEX_NAME = INDEX_PATH + "words";
+	public static final String KORPUS_NAME = "/info/adk12/labb1/korpus";
 	public static final Integer SURROUNDING_TEXT_SIZE = 30;
 	
 	public static void main(String[] args) throws IOException {
@@ -21,10 +21,8 @@ public class Main {
 				System.out.println("Word not found!");
 				return;
 			}
-			System.out.println("Det finns " + result.index + " förekomster av ordet.");
-			System.out.println(result.text);
-			
-			
+			System.out.println("Det finns " + result.index + " f√∂rekomster av ordet.");
+			System.out.println(result.text);	
 		}
 		else if (args.length == 2) {
 			String bigIndicePath = args[0];
@@ -41,9 +39,12 @@ public class Main {
 		long mediumIndexPos = 0;
 		String lastMediumWord = "";
 		
+		File f = new File(INDEX_PATH);
+		f.mkdirs();
+		
 		// Delete old files and create new medium index file and also create new directory for small indices
 		FileBuffered bigIndexFile = new FileBuffered(bigIndexPath, "r");
-		File f = new File(MEDIUM_INDEX_NAME);
+		f = new File(MEDIUM_INDEX_NAME);
 		delete(f);
 		f.createNewFile();
 		delete(SMALL_INDICES_PATH.substring(0, SMALL_INDICES_PATH.length() - 1 ));
@@ -82,6 +83,7 @@ public class Main {
 		mediumIndexFile.close();
 		bigIndexFile.close();
 		System.out.println("Done createing indices!");
+		
 	}
 	
 	public static void delete(String filePath) throws IOException{

@@ -30,7 +30,7 @@ public final class WordFinder {
 
 		
 		boolean foundFile = false;
-		for(int i = 1; smallIndex + i <= hashSmallIndex("ššš") && !foundFile; i++){
+		for(int i = 1; smallIndex + i <= hashSmallIndex("Ã¶Ã¶Ã¶") && !foundFile; i++){
 			if(new File(Main.SMALL_INDICES_PATH + (smallIndex + i)).isFile()){
 				FileBuffered smallIndexFileEnd = new FileBuffered(Main.SMALL_INDICES_PATH + (smallIndex + i), "r");
 				endPair = mediumIndexFile.readWordWalkLeft(Long.parseLong(smallIndexFileEnd.readLine()) - 1);
@@ -64,7 +64,7 @@ public final class WordFinder {
 		FileRandom korpusFile = new FileRandom(Main.KORPUS_NAME, "r");
 		StringBuilder returnText = new StringBuilder();
 		for(long korpusIndex : bigIndicesList){
-			returnText.append(korpusFile.getSurroundingText(korpusIndex, word.length()).replace("\n", " ") + "\n");
+			returnText.append(korpusFile.getSurroundingText(korpusIndex, word.length()).replaceAll("(\\n)+", " ") + "\n");
 		}
 		korpusFile.close();
 		return new WordPair(returnText.toString(), bigIndicesList.size());
@@ -125,19 +125,19 @@ public final class WordFinder {
 	}
 	
 	private static int convertCharToInt(char c){
-		int ascii = (int) c;
-		if(ascii > 64 && ascii < 91){
-			return ascii - 64;
-		}else if(ascii > 96 && ascii < 123){
-			return ascii - 96;
-		}else if(ascii == 229 || ascii == 143){
+		int code = (int) c;
+		if(code > 64 && code < 91){
+			return code - 64;
+		}else if(code > 96 && code < 123){
+			return code - 96;
+		}else if(code == 229 || code == 197){
 			return 27;
-		}else if(ascii == 228 || ascii == 142){
+		}else if(code == 228 || code == 196){
 			return 28;
-		}else if(ascii == 246 || ascii == 153){ // ska vara 146 inte 246
+		}else if(code == 246 || code == 214){
 			return 29;
 		} else{
-			throw new RuntimeException("Character is not a letter: " + c + " and gives the ascii: " + ascii);
+			throw new RuntimeException("Character is not a letter: " + c + " and gives the ascii: " + code);
 		}
 	}
 

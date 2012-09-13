@@ -42,17 +42,17 @@ public class FileRandom extends RandomAccessFile{
 	public String readWordStandStill(long seekValue) throws IOException {
 		seek(seekValue);
 		StringBuilder word = new StringBuilder();
-		String letter = convertByteToString((byte)read());
+		String letter = convertByteToString(read());
 		while(!letter.equals(" ")){
 			word.append(letter);
-			letter = convertByteToString((byte)read());
+			letter = convertByteToString(read());
 		}
 		return word.toString();
 	}
 	
 	public WordPair readWordWalkLeft(long seekValue) throws IOException {
 		seek(seekValue);
-		String currentLetter = convertByteToString((byte)read());
+		String currentLetter = convertByteToString(read());
 		String lastLetter = "";
 		boolean found = false;
 		while(!found){
@@ -65,7 +65,7 @@ public class FileRandom extends RandomAccessFile{
 					found = true;
 				} else{
 					seek(getFilePointer() - 2);
-					currentLetter = convertByteToString((byte)read());
+					currentLetter = convertByteToString(read());
 				}
 			}
 		}
@@ -78,8 +78,8 @@ public class FileRandom extends RandomAccessFile{
 			return new WordPair(readWordStandStill(0),0);
 		}
 		seek(seekValue-1);
-		String lastLetter = convertByteToString((byte)read());;
-		String currentLetter = convertByteToString((byte)read());
+		String lastLetter = convertByteToString(read());
+		String currentLetter = convertByteToString(read());
 		
 		boolean found = false;
 		while(!found){
@@ -88,17 +88,15 @@ public class FileRandom extends RandomAccessFile{
 				seek(getFilePointer()-1);
 			}else{
 				lastLetter = currentLetter;
-				currentLetter = convertByteToString((byte)read());
+				currentLetter = convertByteToString(read());
 			}
 		}
 		long wordPointer = getFilePointer();
 		return new WordPair(readWordStandStill(getFilePointer()),wordPointer);
 	}
 	
-	private String convertByteToString(byte b) throws UnsupportedEncodingException{
-		byte[] by= new byte[1];
-		by[0] = b;
-		return new String(by, "ISO-8859-1");
+	private String convertByteToString(int b) throws UnsupportedEncodingException{
+		return new String(String.valueOf((char)b).getBytes("ISO-8859-1"), "ISO-8859-1");
 	}
 	
     private boolean isInteger(String input )  
@@ -121,7 +119,7 @@ public class FileRandom extends RandomAccessFile{
 		seek(seekValue);
 		String currentLetter = "";
 		while(!currentLetter.equals(" ")){
-			currentLetter = convertByteToString((byte)read());
+			currentLetter = convertByteToString(read());
 		}
 		return Long.parseLong(readWordStandStill(getFilePointer()));
 	}
@@ -136,7 +134,7 @@ public class FileRandom extends RandomAccessFile{
 		StringBuilder word = new StringBuilder();
 		for(int i = 0; i < wordSize + Main.SURROUNDING_TEXT_SIZE*2; i++){
 			if(!(startPoint + i < 0 || startPoint + i > length() -1)){
-				word.append(convertByteToString((byte)read()));
+				word.append(convertByteToString(read()));
 			}
 		}
 		
