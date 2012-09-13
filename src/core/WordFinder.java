@@ -30,7 +30,7 @@ public final class WordFinder {
 
 		
 		boolean foundFile = false;
-		for(int i = 1; smallIndex + i <= hashSmallIndex("Ã¶Ã¶Ã¶") && !foundFile; i++){
+		for(int i = 1; smallIndex + i <= hashSmallIndex("ššš") && !foundFile; i++){
 			if(new File(Main.SMALL_INDICES_PATH + (smallIndex + i)).isFile()){
 				FileBuffered smallIndexFileEnd = new FileBuffered(Main.SMALL_INDICES_PATH + (smallIndex + i), "r");
 				endPair = mediumIndexFile.readWordWalkLeft(Long.parseLong(smallIndexFileEnd.readLine()) - 1);
